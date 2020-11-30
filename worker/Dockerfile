@@ -24,10 +24,8 @@ RUN apt-get install -y --fix-missing \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
-RUN cd ~ && \
-    mkdir -p dlib && \
-    git clone https://github.com/hhursev/recipe-scrapers.git && \
-    cd  dlib/ && \
+RUN git clone https://github.com/hhursev/recipe-scrapers.git && \
+    cd  recipe-scrapers
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 RUN pip3 install pika
