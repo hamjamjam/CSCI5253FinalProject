@@ -24,13 +24,7 @@ RUN apt-get install -y --fix-missing \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
-RUN pip3 install pika
-RUN pip3 install redis
-RUN pip3 install flask
-RUN pip3 install requests
-RUN pip3 install --upgrade pip
 RUN git clone https://github.com/hhursev/recipe-scrapers.git
-RUN cd recipe-scrapers
 RUN pip3 install recipe-scrapers
 #CMD python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
