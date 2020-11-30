@@ -1,40 +1,14 @@
 #
 # Worker server
 #
-import pickle
-import platform
-from PIL import Image
-import io
-import os
-import sys
-import pika
-import redis
-import hashlib
-import inspect
-import urllib.request
-import requests
-from io import BytesIO
+from recipe_scrapers import scrape_me
 
-hostname = platform.node()
-
-redisHost = os.getenv("REDIS_HOST") or "redis"
 rabbitMQHost = os.getenv("RABBITMQ_HOST") or "rabbitmq"
 
-print("Connecting to rabbitmq({}) and redis({})".format(rabbitMQHost,redisHost))
+print("Connecting to rabbitmq({})".format(rabbitMQHost))
 
-import face_recognition
-from flask import Flask, jsonify, request, redirect
 
 # You can change this to any folder on your system
-
-redisNameToHash = redis.Redis(host=redisHost, db=1)    # Key -> Value
-redisHashToName = redis.Redis(host=redisHost, db=2)    # Key -> Set
-redisHashToFaceRec = redis.Redis(host=redisHost, db=3) # Key -> Set
-redisHashToHashSet = redis.Redis(host=redisHost, db=4) # Key -> Set
-redisFaceToHashSet = redis.Redis(host=redisHost, db=5) # Key -> Set
-redisHashToObama = redis.Redis(host=redisHost, db=6)
-redisNameToHash.set('foo','bar')
-print(redisNameToHash.get('foo'))
 
 def isMatch(face_encodings, face_encodings_serialized):
     is_match = False
