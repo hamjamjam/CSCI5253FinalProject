@@ -24,6 +24,7 @@ app = Flask(__name__)
 def match(X):
     myingredients = X
     ingredientsList = myingredients.split(',')
+    #make sql request
     recipeURLs = ['a','b']
     return jsonify(recipeURLList = recipeURLs)
 
