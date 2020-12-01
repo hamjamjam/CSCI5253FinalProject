@@ -11,7 +11,7 @@ import jsonpickle
 
 def doIngerdients(addr, ingredients, debug=False):
     # prepare headers for http request
-    headers = {'content-type': 'image/jpg'}
+    headers = {'content-type': 'application/json'}
     # send http request with ingredients and receive response
     #ingredients should be string of form 'lemon,beef,rosemary'
     ing_url = addr + '/scan/ingredients' + "/" + os.path.basename(filename)
