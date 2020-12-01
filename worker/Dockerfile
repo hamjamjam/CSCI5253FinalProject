@@ -26,6 +26,8 @@ RUN apt-get install -y --fix-missing \
 
 RUN git clone https://github.com/hhursev/recipe-scrapers.git
 RUN pip3 install recipe-scrapers
+RUN git clone https://github.com/tobiasli/groceries.git
+RUN pip3 install groceries-tobiasli
 #CMD python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 ENV PYTHONUNBUFFERED=1
