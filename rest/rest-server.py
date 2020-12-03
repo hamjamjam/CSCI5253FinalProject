@@ -13,9 +13,11 @@ import base64
 ## Configure test vs. production
 ##
 rabbitMQHost = os.getenv("RABBITMQ_HOST") or "rabbitmq"
-
+redisHost = os.getenv("REDIS_HOST") or "redis"
 
 print("Connecting to rabbitmq({})".format(rabbitMQHost))
+
+redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -23,10 +25,16 @@ app = Flask(__name__)
 @app.route('/scan/ingredients/<X>', methods=['GET'])
 def match(X):
     myingredients = X
-    ingredientsList = myingredients.split(',')
-    #make sql request
-    recipeURLs = ['a','b']
-    return jsonify(recipeURLList = recipeURLs)
+    ingredientsSet = set(myingredients.split(','))
+    #make sql req
+    outputURLs = []
+    for key in redisHashToFaceRec.keys():
+        ingredients = set(redisUrltoIngredientSet.smembers(key))
+        if ingredients.issubset(myingredientsSet):
+            outputUrls.append(key.decode("utf-8"))
+     if outputURLs = []:
+        outputURLs.append('No matching recipes')
+     return jsonify(recipeURLList = outputURLs)
 
 
 @app.route('/scan/url', methods=['POST'])
@@ -35,9 +43,8 @@ def scanUrl():
     url = data["url"]
     print(url)
     
-    #check if URl in db already
-    #if URL already in db,
-    #return jsonify(response = "recipe already in DB")
+    if redisUrltoIngredientSet.exists(url):
+        return jsonify(response = "recipe already in DB")
     
     message = url
     credentials=pika.PlainCredentials('guest','guest')
@@ -51,11 +58,8 @@ def scanUrl():
     
     for i in range(0,10):
         time.sleep(0.75)
-        #check if recipe exists in SQL db
-        #if it does return good response
-        #if bad 
-        #return Response(status=500)
-        return jsonify(response = "added recipe to DB")
+        if redisUrltoIngredientSet.exists(url):
+            return jsonify(response = "added recipe to DB")
     return jsonify(response = "request timeout")
 
 print('pooooo')
