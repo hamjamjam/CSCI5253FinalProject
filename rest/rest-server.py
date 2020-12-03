@@ -29,7 +29,8 @@ def match(X):
     #make sql req
     outputURLs = []
     for key in redisHashToFaceRec.keys():
-        ingredients = set(redisUrltoIngredientSet.smembers(key))
+        ingredientslist = list(redisUrltoIngredientSet.smembers(key))
+        ingredients = set([ingredient.decode("utf-8") for ingredient in ingredientslist])
         if ingredients.issubset(myingredientsSet):
             outputUrls.append(key.decode("utf-8"))
      if outputURLs = []:
