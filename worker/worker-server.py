@@ -15,9 +15,7 @@ rabbitMQHost = os.getenv("RABBITMQ_HOST") or "rabbitmq"
 
 print("Connecting to rabbitmq({}) and redis({})".format(rabbitMQHost,redisHost))
 
-
-def addToDB(a, b)
-    return
+redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
 
 def addRecipe(ch, method, properties, inputbody):
     try:
@@ -42,7 +40,7 @@ def addRecipe(ch, method, properties, inputbody):
             
     finalings.append(finaling)
     
-    addToDB(inputbody, finalings)
+    redisUrltoIngredientSet.sadd(url, *ingredients)
           
           
 def main():
