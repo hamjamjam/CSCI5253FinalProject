@@ -1,6 +1,6 @@
 #!/bin/bash
 version=$(git rev-parse HEAD)
-export PROJECT_ID=jamiess-1470077384373
+export PROJECT_ID=ninth-tensor-297101
 docker build -t rest:${version} .
 docker build -t gcr.io/${PROJECT_ID}/rest:${version} .
 docker push gcr.io/${PROJECT_ID}/rest:${version}
