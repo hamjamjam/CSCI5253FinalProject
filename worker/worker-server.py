@@ -5,6 +5,7 @@ import pika
 import io
 import os
 import sys
+import platform
 from recipe_scrapers import scrape_me
 from groceries import Ingredient
 
@@ -16,6 +17,7 @@ rabbitMQHost = os.getenv("RABBITMQ_HOST") or "rabbitmq"
 print("Connecting to rabbitmq({}) and redis({})".format(rabbitMQHost,redisHost))
 
 redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
+print("initiliazed redis db")
 
 def addRecipe(ch, method, properties, inputbody):
     try:
