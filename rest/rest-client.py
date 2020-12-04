@@ -14,8 +14,9 @@ def doIngredients(addr, ingredients, debug=False):
     headers = {'content-type': 'application/json'}
     # send http request with ingredients and receive response
     #ingredients should be string of form 'lemon,beef,rosemary'
-    ing_url = addr + '/scan/ingredients' + "/" + os.path.basename(ingredients)
-    response = requests.post(ing_url, data=ingredients, headers=headers)
+    ing_url = addr + '/scan/ingredients'
+    data = jsonpickle.encode({ "ings" : ingredients})
+    response = requests.post(ing_url, data=data, headers=headers)
     if debug:
         # decode response
         print("Response is", response)
