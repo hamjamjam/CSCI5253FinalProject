@@ -58,7 +58,7 @@ def addRecipe(ch, method, properties, inputbody):
 
         finalings.append(finaling)
 
-        redisUrltoIngredientSet.sadd(body, *ingredients)
+        redisUrltoIngredientSet.sadd(body, *finalings)
         
     except Exception as e:
         print(e)
