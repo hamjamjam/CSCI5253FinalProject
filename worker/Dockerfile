@@ -28,6 +28,11 @@ RUN git clone https://github.com/hhursev/recipe-scrapers.git
 RUN pip3 install recipe-scrapers
 RUN git clone https://github.com/tobiasli/groceries.git
 RUN pip3 install groceries-tobiasli
+RUN pip3 install pika
+RUN pip3 install redis
+RUN pip3 install flask
+RUN pip3 install requests
+
 #CMD python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 ENV PYTHONUNBUFFERED=1
