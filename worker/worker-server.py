@@ -38,7 +38,7 @@ def addRecipe(ch, method, properties, inputbody):
         print(e)
         print('error scraping')
 
-    special = {'diced', 'chopped', 'squeezed', 'tablespoon', 'teaspoon', 'tbsp', 'tsp', 'tablespoons', 'teaspoons'}
+    special = {'diced', 'chopped', 'squeezed', 'tablespoon', 'teaspoon', 'tbsp', 'tsp', 'tablespoons', 'teaspoons', 'large'}
     
     try:
         ings = scraper.ingredients()
@@ -55,8 +55,16 @@ def addRecipe(ch, method, properties, inputbody):
             finaling = parseding.name
             if finaling.split(' ')[0] in special:
                 finaling = " ".join(finaling.split(' ')[1:])
-
-        finalings.append(finaling)
+                
+            if 'salt' in set(finaling.split(' ')) and 'pepper' in set(finaling.split(' ')):
+                finalings.append('salt')
+                finaling = 'pepper'
+            elif 'salt' in set(finaling.split(' ')):
+                finaling = 'salt'
+            elif 'pepper' in set(finaling.split(' ')):
+                finaling = 'pepper'
+            
+            finalings.append(finaling)
 
         redisUrltoIngredientSet.sadd(body, *finalings)
         
