@@ -22,7 +22,7 @@ redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
 # Initialize the Flask application
 app = Flask(__name__)
 
-@app.route('/scan/ingredients/<X>', methods=['GET'])
+@app.route('/scan/ingredients/<X>', methods=['POST'])
 def match(X):
     myingredients = X
     ingredientsSet = set(myingredients.split(','))
@@ -35,7 +35,7 @@ def match(X):
             outputUrls.append(key.decode("utf-8"))
     if outputURLs == []:
         outputURLs.append('No matching recipes')
-    return jsonify(recipeURLList = outputURLs)
+    return jsonify(response = outputURLs)
 
 
 @app.route('/scan/url', methods=['POST'])
