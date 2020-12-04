@@ -43,7 +43,7 @@ def addRecipe(ch, method, properties, inputbody):
     try:
         ings = scraper.ingredients()
         print('got ingredients (and amounts)')
-    except Exception as (e):
+    except Exception as e:
         print(e)
         print('problem with ings = scraper.ingredients()')
         
