@@ -29,23 +29,40 @@ def addRecipe(ch, method, properties, inputbody):
         print('callback made')
     except Exception as e:
         print(e)
-  
-    scraper = scrape_me(inputbody)
+        print('error processing body')
+    
+    try:
+        scraper = scrape_me(body)
+        print('scrape successful')
+    except Exception as e:
+        print(e)
+        print('error scraping')
 
     special = {'diced', 'chopped', 'squeezed', 'tablespoon', 'teaspoon', 'tbsp', 'tsp', 'tablespoons', 'teaspoons'}
-
-    ings = scraper.ingredients()
+    
+    try:
+        ings = scraper.ingredients()
+        print('got ingredients (and amounts)')
+    except Exception as (e):
+        print(e)
+        print('problem with ings = scraper.ingredients()')
+        
     finalings = []
     
-    for ing in ings:
-        parseding = Ingredient(ing)
-        finaling = parseding.name
-        if finaling.name.split(' ')[0] in special:
-            finaling = " ".join(finaling.name.split(' ')[1:])
-            
-    finalings.append(finaling)
-    
-    redisUrltoIngredientSet.sadd(url, *ingredients)
+    try:
+        for ing in ings:
+            parseding = Ingredient(ing)
+            finaling = parseding.name
+            if finaling.name.split(' ')[0] in special:
+                finaling = " ".join(finaling.name.split(' ')[1:])
+
+        finalings.append(finaling)
+
+        redisUrltoIngredientSet.sadd(url, *ingredients)
+        
+    except Exception as e:
+        print(e)
+        print('error parings and then writing to redis')
           
           
 def main():
