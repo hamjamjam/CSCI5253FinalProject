@@ -22,11 +22,10 @@ redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
 # Initialize the Flask application
 app = Flask(__name__)
 
-@app.route('/scan/ingredients/<X>', methods=['POST'])
-def match(X):
-    myingredients = X
+@app.route('/scan/ingredients', methods=['POST'])
+def match():
+    myingredients = data["ings"]
     ingredientsSet = set(myingredients.split(','))
-    #make sql req
     outputURLs = []
     for key in redisHashToFaceRec.keys():
         ingredientslist = list(redisUrltoIngredientSet.smembers(key))
