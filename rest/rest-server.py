@@ -12,31 +12,30 @@ import base64
 ##
 ## Configure test vs. production
 ##
-redisHost = os.getenv("REDIS_HOST") or "redis"
 rabbitMQHost = os.getenv("RABBITMQ_HOST") or "rabbitmq"
+redisHost = os.getenv("REDIS_HOST") or "redis"
 
-redisNameToHash = redis.Redis(host=redisHost, db=1)    # Key -> Value
-redisHashToName = redis.Redis(host=redisHost, db=2)    # Key -> Set
-redisHashToFaceRec = redis.Redis(host=redisHost, db=3) # Key -> Set
-redisHashToHashSet = redis.Redis(host=redisHost, db=4) # Key -> Set
-redisFaceToHashSet = redis.Redis(host=redisHost, db=5) # Key -> Set
-redisHashToObama = redis.Redis(host=redisHost, db=6)
+print("Connecting to rabbitmq({})".format(rabbitMQHost))
 
-
-print("Connecting to rabbitmq({}) and redis({})".format(rabbitMQHost,redisHost))
+redisUrltoIngredientSet = redis.Redis(host=redisHost, db=1) # Key -> Set
 
 # Initialize the Flask application
 app = Flask(__name__)
 
-@app.route('/scan/match/<X>', methods=['GET'])
+@app.route('/scan/ingredients/<X>', methods=['GET'])
 def match(X):
-    myhash = X
-    if redisHashToHashSet.exists(myhash):
-        hasheSet = list(redisHashToHashSet.smembers(myhash))
-        hashes = [hash.decode("utf-8") for hash in hasheSet]
-    else:
-        hashes = "no matching images"
-    return jsonify(hash_list = hashes)
+    myingredients = X
+    ingredientsSet = set(myingredients.split(','))
+    #make sql req
+    outputURLs = []
+    for key in redisHashToFaceRec.keys():
+        ingredientslist = list(redisUrltoIngredientSet.smembers(key))
+        ingredients = set([ingredient.decode("utf-8") for ingredient in ingredientslist])
+        if ingredients.issubset(myingredientsSet):
+            outputUrls.append(key.decode("utf-8"))
+     if outputURLs = []:
+        outputURLs.append('No matching recipes')
+     return jsonify(recipeURLList = outputURLs)
 
 
 @app.route('/scan/url', methods=['POST'])
@@ -44,6 +43,9 @@ def scanUrl():
     data = request.json
     url = data["url"]
     print(url)
+    
+    if redisUrltoIngredientSet.exists(url):
+        return jsonify(response = "recipe already in DB")
     
     message = url
     credentials=pika.PlainCredentials('guest','guest')
@@ -57,22 +59,9 @@ def scanUrl():
     
     for i in range(0,10):
         time.sleep(0.75)
-        if redisNameToHash.exists(url):
-            myhash = redisNameToHash.get(url)
-#            if redisHashToObama.exists(myhash):
-#                isObama = redisHashToObama.get(myhash).decode("utf-8") 
-#                print("is obama: ", isObama)
-#                return jsonify(is_obama=isObama)
-            if redisHashToHashSet.exists(myhash):
-                hasheSet = list(redisHashToHashSet.smembers(myhash))
-                hashes = [hash.decode("utf-8") for hash in hasheSet]
-                print('got hashes')
-                return jsonify(hash_list = hashes)
-
-    if redisNameToHash.exists(url):
-        return jsonify(hash_list = "no matching images")
-    else:
-        return Response(status=500)
+        if redisUrltoIngredientSet.exists(url):
+            return jsonify(response = "added recipe to DB")
+    return jsonify(response = "request timeout")
 
 print('pooooo')
 
