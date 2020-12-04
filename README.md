@@ -1,7 +1,7 @@
 # CSCI 5253 Final Project
-## Jamie Voros
-## Collaborators: None (I couldn't find friends :( )
-## Fall 2020
+Jamie Voros
+Collaborators: None
+Fall 2020
 
 # Work process
 
