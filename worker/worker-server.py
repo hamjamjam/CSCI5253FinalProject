@@ -6,6 +6,9 @@ import io
 import os
 import sys
 import platform
+import redis
+import inspect
+import urllib.request
 from recipe_scrapers import scrape_me
 from groceries import Ingredient
 
