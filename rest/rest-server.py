@@ -33,7 +33,7 @@ def match(X):
         ingredients = set([ingredient.decode("utf-8") for ingredient in ingredientslist])
         if ingredients.issubset(myingredientsSet):
             outputUrls.append(key.decode("utf-8"))
-     if outputURLs = []:
+     if outputURLs == []:
         outputURLs.append('No matching recipes')
      return jsonify(recipeURLList = outputURLs)
 
