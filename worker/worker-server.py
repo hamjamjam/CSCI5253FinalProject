@@ -53,8 +53,8 @@ def addRecipe(ch, method, properties, inputbody):
         for ing in ings:
             parseding = Ingredient(ing)
             finaling = parseding.name
-            if finaling.name.split(' ')[0] in special:
-                finaling = " ".join(finaling.name.split(' ')[1:])
+            if finaling.split(' ')[0] in special:
+                finaling = " ".join(finaling.split(' ')[1:])
 
         finalings.append(finaling)
 
