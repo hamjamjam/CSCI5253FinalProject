@@ -2,7 +2,7 @@
 ##
 ## You provide this to build your docker image
 ##
-version=$(git describe)
+version=$(git rev-parse HEAD)
 export PROJECT_ID=ninth-tensor-297101
 docker build -t worker:${version} .
 docker build -t gcr.io/${PROJECT_ID}/worker:${version} .
