@@ -58,11 +58,11 @@ def addRecipe(ch, method, properties, inputbody):
 
         finalings.append(finaling)
 
-        redisUrltoIngredientSet.sadd(url, *ingredients)
+        redisUrltoIngredientSet.sadd(body, *ingredients)
         
     except Exception as e:
         print(e)
-        print('error parings and then writing to redis')
+        print('error parsing and then writing to redis')
           
           
 def main():
