@@ -9,7 +9,7 @@ import time
 import sys, os
 import jsonpickle
 
-def doIngerdients(addr, ingredients, debug=False):
+def doIngredients(addr, ingredients, debug=False):
     # prepare headers for http request
     headers = {'content-type': 'application/json'}
     # send http request with ingredients and receive response
