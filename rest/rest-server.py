@@ -29,7 +29,7 @@ def match():
     print(myingredients)
     ingredientsSet = set(myingredients.split(','))
     outputURLs = []
-    for key in redisHashToFaceRec.keys():
+    for key in redisUrltoIngredientSet.keys():
         ingredientslist = list(redisUrltoIngredientSet.smembers(key))
         ingredients = set([ingredient.decode("utf-8") for ingredient in ingredientslist])
         if ingredients.issubset(myingredientsSet):
