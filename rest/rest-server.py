@@ -33,7 +33,7 @@ def match():
         ingredientslist = list(redisUrltoIngredientSet.smembers(key))
         ingredients = set([ingredient.decode("utf-8") for ingredient in ingredientslist])
         if ingredients.issubset(ingredientsSet):
-            outputUrls.append(key.decode("utf-8"))
+            outputURLs.append(key.decode("utf-8"))
     if outputURLs == []:
         outputURLs.append('No matching recipes')
     return jsonify(response = outputURLs)
