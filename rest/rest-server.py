@@ -24,7 +24,9 @@ app = Flask(__name__)
 
 @app.route('/scan/ingredients', methods=['POST'])
 def match():
+    data = request.json
     myingredients = data["ings"]
+    print(myingredients)
     ingredientsSet = set(myingredients.split(','))
     outputURLs = []
     for key in redisHashToFaceRec.keys():
