@@ -6,6 +6,10 @@ Fall 2020
 # Work process
 
 ## Create a kubernetes cluster
+```
+gcloud config set compute/zone us-central1-b
+gcloud container clusters create --preemptible mykube
+```
 
 ## Use existing RabbitMQ and Redis setups from lab7 to create queue pod
 I did not need to change anything here. I was able to copy the Rabbitmq and Redis folders over and deploy the two services without an issue.
@@ -37,12 +41,25 @@ I set the pod to write python output to log files and wrote a script to pull up 
 
 Rabbit is pretty frustrating in that error messages aren't printed if an error occurs in its callback function. Therefore, I wrapped most of that in various try excepts in order to get at my error messages. There are numerous print statements (that print to the log file) telling me where the script 'got to'.
 
-## Use existing setup from lab7 to create server API pod, expose to public
+## Use existing setup from lab7 to create rest server and client
 Use what we already have from lab 7 to deploy a REST API server/client pair. Make sure it's set up as load balancer.
+
+The rest API can take two types of inputs - the url of a recipe to be scraped or a comma separated list of pantry items.
+
+If a url is given, the server passes the url to rabbit (who hands it to the worker).
+
+If a list of ingredients is given, the server searches through the redis database and returns the urls of all the recipes for which the recipe-required ingredietns are a subset of the pantry items passed in
 
 ### Debug
 Thankfully these guys were already set up from lab 7 to write to logs (server) or display error messages when called (client).
 
-## Use existing setup from lab7 to create a client API that can send either 'recipe to add' or 'ingredients to match'
-Recipe to add will send the url to rabbitMQ.
-Ingredients to match will query the Recipes table.
+## Scripts hanging out
+`get-logs.sh` - retuns log files for the specificed pod
+
+`rest/build-test.sh` builds the rest server
+
+`rest/test-client.sh` tests the url input to rest, takes url argument. If none give, uses standard
+
+`rest/test-client-get.sh` tests the ingredient list input
+
+`worker/Makefile.sh` builds the worker node
