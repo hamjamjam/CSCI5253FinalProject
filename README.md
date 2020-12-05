@@ -1,6 +1,8 @@
 # CSCI 5253 Final Project
 Jamie Voros
+
 Collaborators: None
+
 Fall 2020
 
 # Work process
@@ -54,7 +56,7 @@ If a list of ingredients is given, the server searches through the redis databas
 Thankfully these guys were already set up from lab 7 to write to logs (server) or display error messages when called (client).
 
 ## Scripts hanging out
-`get-logs.sh` - retuns log files for the specificed pod
+`get-logs.sh` retuns log files for the specificed pod
 
 `rest/build-test.sh` builds the rest server
 
