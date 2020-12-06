@@ -5,6 +5,114 @@ Collaborators: None
 
 Fall 2020
 
+# Project Description
+Title: Ingredients to Recipe (with ability to add to database) as a Service
+
+### Overview and Goals
+1.	Take a set of ingredients as input and return a list of recipe URLs to online recipes that can be made with the ingredients
+
+2.	Take a recipe URL, scrape it and add the URL and ingredients set to the database
+
+### Software and Hardware
+Software:
+
+Database - Redis
+
+Queue – RabbitMQ
+
+API – REST server and client
+
+Listener and scraper (scraping done by https://github.com/hhursev/recipe-scrapers and https://github.com/tobiasli/groceries.git)
+
+Hardware/Infrastructure:
+
+Kubernetes Cluster (hosted via GCP)
+
+### Diagram
+
+![](image.png)
+
+Database Schema
+
+A single key to set store in Redis going from recipe URL to the set of its ingredients.
+
+### Components
+Kubernetes Cluster
+
+Purpose: to house the project
+
+Why: It was much faster to be able to whip up and kill pods during testing (than it would have been had I been using entire VMs). Additionally, Docker has a lot of support and existing images which made setting up every other component much easier.
+Interactions: It houses all the following components
+
+
+API
+
+Purpose: This was the interface; this is how the user interacts with the service as a whole.
+
+Why: I chose REST (over grcp) because, although grcp can be superior if running many queries which can use the same connection, this is unlikely to happen here. Additionally, we already had this set up on kube for lab 7, which made selecting the base Docker image and building the Dockerfile much easier.
+
+Interaction:  The client interacts with the user. The user uses the client script to pass requests to the server.
+
+The server takes requests from the client and either passes them to RabbitMQ (when adding a recipe to the database) or processes the request from the client and hands and output back (when returning matching recipes).
+
+
+Database
+
+Purpose: To store all of our recipe data.
+
+Why: Redis is a really nice way to store key -> set stores. I had originally planned to use some kind of SQL style database, but it proved much easier to take advantage of Redis’ k,v store allowing the ‘v’ part to be a set (which SQL does not do as well).
+
+Interaction: Redis is written into by the worker node only. Redis is queried by the REST server only.
+
+
+Queue
+
+Purpose: To avoid sending work to the worker node while it is still working. The queue allows the REST server to not have to confirm that the worker is ready for another request.
+
+Why: RabbitMQ has amazing doc files. Here, we needed just one queue (although Rabbit has quite a lot of functionality).
+
+Interactions: Rabbit is handed messages by the REST server and will pass them to worker nodes listening to the appropriate queue.
+
+
+Worker
+
+Purpose: Where all the hard work happens. The worker exists to do the recipe crunching and to write the appropriate information to the database.
+
+Why: The scraping and writing was too much to happen on the REST server itself, therefore it hands off the hard work to the worker.
+
+Interactions: The worker is listening to one of Rabbit’s queues. When it gets a message from RabbitMQ, the worker processes the recipe and writes the recipe and ingredients to the database.
+
+### Capabilities and Limitations
+
+Capabilities
+
+The service can take in a url linking to an online recipe, scrape it and write to a database. When a url is submitted, the service will return one of three things:
+
+•	The recipe is already in the database
+
+•	The recipe has been added to the database
+
+•	There was an error or timeout
+
+
+The service can take a comma separated list of pantry items and will return one of two things when submitted:
+
+•	These are the matching recipe urls
+
+•	There are not matching recipes
+
+
+Limitations
+
+The service is not very robust. The scraper component is not perfect. The recipe is scraped down to its ingredients and also quantities and descriptions (e.g. “one cup lemon juice” or “1/2 chopped onion” or “1 pound lean ground pork”). Going from ingredients that contain a description (e.g. “chopped onion”) to the pantry item (e.g. “onion”) proved quite difficult.
+
+The service also needs to drop everything to singulars, sometimes, depending on how the scraping runs, an item like “eggs” may show up as “egg” or “eggs”, which means that the user has to put both the singular and plural into their request. This could be solved by having a standardized library of ingredients and having an algorithm assign each ingredient that comes in (either via the recipe scraper or user input) to one in its standardized library. There may be some miss-assignment, but in the world of cooking and recipes, a lot of ingredients can be substituted anyway.
+
+Further work could be done on ingredient quantities. This would require the service to be able to take each ingredient quantity and convert it to a common unit (sometimes the recipes call for cups of flour, others call for grams).
+
+Another point of lack of robustness is that right now there is no check of whether the url is a recipe url, the service just blindly tries to scrape and will still add whatever comes back (even if empty) to the database.
+
+
 # Work process
 
 ## Create a kubernetes cluster
